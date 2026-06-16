@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XpeeR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  </head>
+  <body>
+    <canvas id="bg-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none;"></canvas>
+    <canvas id="three-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none;"></canvas>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+        // --- WEBGL SHADER BACKGROUND ---
+        const canvas = document.getElementById('bg-canvas');
+        const gl = canvas.getContext('webgl');
+
+        if (gl) {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const vertexShaderSource = `
+                attribute vec2 position;
+                void main() {
+                    gl_Position = vec4(position, 0.0, 1.0);
+                }
+            `;
+
+            const fragmentShaderSource = `
+                precision mediump float;
+                uniform vec2 u_resolution;
+                uniform float u_time;
+                uniform vec2 u_mouse;
+
+                float noise(vec2 p) {
+                    return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+                }
+
+                void main() {
+                    vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+                    vec2 centerUv = uv * 2.0 - 1.0;
+                    centerUv.x *= u_resolution.x / u_resolution.y;
+
+                    vec2 mouseUv = u_mouse / u_resolution.xy;
+                    mouseUv = mouseUv * 2.0 - 1.0;
+                    mouseUv.x *= u_resolution.x / u_resolution.y;
+
+                    float distCenter = length(centerUv);
+                    float distMouse = length(centerUv - mouseUv);
+
+                    float wave1 = sin(distCenter * 5.0 - u_time * 0.5);
+                    float wave2 = cos(centerUv.x * 3.0 + u_time) * sin(centerUv.y * 3.0 + u_time * 0.8);
+                    
+                    float fluid = wave1 * 0.5 + wave2 * 0.5;
+
+                    vec3 color1 = vec3(0.04, 0.04, 0.06); 
+                    vec3 color2 = vec3(0.1, 0.1, 0.15);  
+
+                    vec3 finalColor = mix(color1, color2, fluid + 0.5);
+
+                    float glow = smoothstep(0.8, 0.0, distMouse);
+                    finalColor += vec3(0.1, 0.1, 0.15) * glow * 0.5;
+                    finalColor += noise(uv + u_time) * 0.02;
+
+                    gl_FragColor = vec4(finalColor, 1.0);
+                }
+            `;
+
+            function createShader(gl, type, source) {
+                const shader = gl.createShader(type);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                return shader;
+            }
+
+            const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+            const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            const positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+                -1.0, -1.0,  1.0, -1.0, -1.0,  1.0,
+                -1.0,  1.0,  1.0, -1.0,  1.0,  1.0
+            ]), gl.STATIC_DRAW);
+
+            const positionLocation = gl.getAttribLocation(program, "position");
+            gl.enableVertexAttribArray(positionLocation);
+            gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+            const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+            const timeLocation = gl.getUniformLocation(program, "u_time");
+            const mouseLocation = gl.getUniformLocation(program, "u_mouse");
+
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = window.innerHeight - e.clientY; 
+            });
+
+            function render(time) {
+                gl.viewport(0, 0, canvas.width, canvas.height);
+                gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+                gl.uniform1f(timeLocation, time * 0.001);
+                gl.uniform2f(mouseLocation, mouseX, mouseY);
+
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+                requestAnimationFrame(render);
+            }
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+            requestAnimationFrame(render);
+        }
+
+        // --- THREE.JS WIREFRAME ELEMENTS ---
+        const threeCanvas = document.getElementById('three-canvas');
+        if (typeof THREE !== 'undefined') {
+          const scene = new THREE.Scene();
+          const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+          const renderer = new THREE.WebGLRenderer({ canvas: threeCanvas, alpha: true, antialias: true });
+          
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          renderer.setPixelRatio(window.devicePixelRatio);
+          camera.position.z = 20;
+
+          const geometries = [
+              new THREE.IcosahedronGeometry(1.5, 0),
+              new THREE.OctahedronGeometry(1.5, 0),
+              new THREE.TetrahedronGeometry(1.5, 0),
+              new THREE.TorusGeometry(1, 0.4, 8, 20)
+          ];
+
+          const material = new THREE.LineBasicMaterial({ color: 0x444748, transparent: true, opacity: 0.3 });
+          const shapes = [];
+
+          for (let i = 0; i < 25; i++) {
+              const geo = geometries[Math.floor(Math.random() * geometries.length)];
+              const edges = new THREE.EdgesGeometry(geo);
+              const line = new THREE.LineSegments(edges, material);
+              
+              line.position.x = (Math.random() - 0.5) * 40;
+              line.position.y = (Math.random() - 0.5) * 40;
+              line.position.z = (Math.random() - 0.5) * 20 - 10;
+              line.rotation.x = Math.random() * Math.PI;
+              line.rotation.y = Math.random() * Math.PI;
+              
+              line.userData = {
+                  rx: (Math.random() - 0.5) * 0.01,
+                  ry: (Math.random() - 0.5) * 0.01,
+                  floatOffset: Math.random() * Math.PI * 2,
+                  baseY: line.position.y,
+                  baseX: line.position.x
+              };
+              
+              scene.add(line);
+              shapes.push(line);
+          }
+
+          let targetMouseX = 0;
+          let targetMouseY = 0;
+          let currentMouseX = 0;
+          let currentMouseY = 0;
+
+          document.addEventListener('mousemove', (event) => {
+              targetMouseX = (event.clientX / window.innerWidth) * 2 - 1;
+              targetMouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+          });
+
+          function animateThree() {
+              requestAnimationFrame(animateThree);
+              currentMouseX += (targetMouseX - currentMouseX) * 0.05;
+              currentMouseY += (targetMouseY - currentMouseY) * 0.05;
+
+              camera.position.x = currentMouseX * 2;
+              camera.position.y = currentMouseY * 2;
+              camera.lookAt(scene.position);
+
+              const time = Date.now() * 0.001;
+              shapes.forEach(shape => {
+                  shape.rotation.x += shape.userData.rx;
+                  shape.rotation.y += shape.userData.ry;
+                  shape.position.y = shape.userData.baseY + Math.sin(time * 2 + shape.userData.floatOffset) * 0.5;
+                  
+                  const dx = shape.position.x - (currentMouseX * 20);
+                  const dy = shape.position.y - (currentMouseY * 20);
+                  const dist = Math.sqrt(dx*dx + dy*dy);
+                  
+                  if(dist < 5) {
+                      shape.position.x += (dx/dist) * 0.02;
+                      shape.position.y += (dy/dist) * 0.02;
+                  } else {
+                      shape.position.x += (shape.userData.baseX - shape.position.x) * 0.01 || 0;
+                  }
+              });
+              renderer.render(scene, camera);
+          }
+
+          window.addEventListener('resize', () => {
+              camera.aspect = window.innerWidth / window.innerHeight;
+              camera.updateProjectionMatrix();
+              renderer.setSize(window.innerWidth, window.innerHeight);
+          });
+
+          animateThree();
+        }
+    </script>
+  </body>
+</html>

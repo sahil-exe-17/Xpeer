@@ -1,0 +1,202 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id              String         @id @default(uuid())
+  username        String         @unique
+  email           String         @unique
+  passwordHash    String
+  avatarUrl       String?
+  avatarFrameUrl  String?
+  currentLevel    Int            @default(1)
+  xp              Int            @default(0)
+  storeBalance    Int            @default(0)
+  aiQuota         Int            @default(5)
+  isPremium       Boolean        @default(false)
+  premiumUntil    DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  posts           Post[]
+  answers         Answer[]
+  upvotes         Upvote[]
+  studyGroups     StudyGroupMember[]
+  messages        Message[]
+  badges          UserBadge[]
+  purchases       Purchase[]
+  notifications   Notification[]
+  xpEvents        XPEvent[]
+  loginStreak     LoginStreak?
+  communities     CommunityMember[]
+}
+
+model LoginStreak {
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currentStreak Int      @default(0)
+  longestStreak Int      @default(0)
+  lastLoginAt   DateTime @default(now())
+}
+
+model Badge {
+  id          String      @id @default(uuid())
+  name        String      @unique
+  description String
+  icon        String
+  isCustom    Boolean     @default(false)
+  users       UserBadge[]
+}
+
+model UserBadge {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeId   String
+  badge     Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  awardedAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+}
+
+model Community {
+  id          String             @id @default(uuid())
+  name        String             @unique
+  description String
+  category    String             // e.g., "Coding", "Career", "Exams", "Projects", "AI Features"
+  createdAt   DateTime           @default(now())
+  
+  members     CommunityMember[]
+  posts       Post[]
+  studyGroups StudyGroup[]
+}
+
+model CommunityMember {
+  id           String    @id @default(uuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  communityId  String
+  community    Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  joinedAt     DateTime  @default(now())
+
+  @@unique([userId, communityId])
+}
+
+model Post {
+  id          String    @id @default(uuid())
+  title       String
+  content     String
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  communityId String
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  tags        String    @default("")
+  isPinned    Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  answers     Answer[]
+  upvotes     Upvote[]
+}
+
+model Answer {
+  id          String    @id @default(uuid())
+  content     String
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  postId      String
+  post        Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  isAccepted  Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  upvotes     Upvote[]
+}
+
+model Upvote {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId    String?
+  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  answerId  String?
+  answer    Answer?  @relation(fields: [answerId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model StudyGroup {
+  id          String             @id @default(uuid())
+  name        String
+  description String
+  communityId String
+  community   Community          @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  sharedNotes String             @default("")
+  createdAt   DateTime           @default(now())
+
+  members     StudyGroupMember[]
+  messages    Message[]
+}
+
+model StudyGroupMember {
+  id           String     @id @default(uuid())
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studyGroupId String
+  studyGroup   StudyGroup @relation(fields: [studyGroupId], references: [id], onDelete: Cascade)
+  joinedAt     DateTime   @default(now())
+
+  @@unique([userId, studyGroupId])
+}
+
+model Message {
+  id           String     @id @default(uuid())
+  content      String
+  senderId     String
+  sender       User       @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  studyGroupId String
+  studyGroup   StudyGroup @relation(fields: [studyGroupId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+}
+
+model StoreItem {
+  id          String     @id @default(uuid())
+  name        String
+  description String
+  cost        Int
+  type        String     // e.g., "AI_QUESTIONS", "STUDY_PLAN", "PREMIUM", "AVATAR", "BADGE", "FRAME", "USERNAME"
+  
+  purchases   Purchase[]
+}
+
+model Purchase {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  storeItemId String
+  storeItem   StoreItem @relation(fields: [storeItemId], references: [id], onDelete: Cascade)
+  purchasedAt DateTime  @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model XPEvent {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount    Int
+  reason    String
+  createdAt DateTime @default(now())
+}
