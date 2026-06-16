@@ -3,3 +3,5 @@ dist
 dev.db
 .env
 .DS_Store
+
+.vercel

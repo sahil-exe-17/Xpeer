@@ -53,7 +53,7 @@ export default function Store() {
               </div>
               <button 
                 onClick={() => handlePurchase(item.id, item.cost)}
-                className="w-full bg-[#000000]/40 border border-[#27272A]/50 hover:bg-primary hover:text-black hover:border-primary text-primary font-label-md py-3 rounded-lg transition-colors flex justify-center items-center gap-xs uppercase tracking-widest z-10 relative"
+                className="w-full bg-surface-container-low dark:bg-[#000000]/40 border border-outline-variant dark:border-[#27272A]/50 hover:bg-primary hover:text-black hover:border-primary text-primary font-label-md py-3 rounded-lg transition-colors flex justify-center items-center gap-xs uppercase tracking-widest z-10 relative"
               >
                 <span className="material-symbols-outlined text-[18px]">shopping_cart</span>
                 <span>{item.cost} Coins</span>

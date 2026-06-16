@@ -23,14 +23,14 @@ export default function Profile() {
           </p>
           
           <div className="grid grid-cols-2 gap-sm">
-            <div className="bg-[#000000]/40 p-sm rounded-lg border border-[#27272A]/50 flex items-center gap-sm">
+            <div className="bg-surface-container-low dark:bg-[#000000]/40 p-sm rounded-lg border border-outline-variant dark:border-[#27272A]/50 flex items-center gap-sm">
               <span className="material-symbols-outlined text-primary">monetization_on</span> 
               <div>
                  <span className="block font-label-md text-on-surface-variant uppercase tracking-wider text-xs">Balance</span>
                  <span className="font-body-md text-primary">{user.storeBalance || 0} Coins</span>
               </div>
             </div>
-            <div className="bg-[#000000]/40 p-sm rounded-lg border border-[#27272A]/50 flex items-center gap-sm">
+            <div className="bg-surface-container-low dark:bg-[#000000]/40 p-sm rounded-lg border border-outline-variant dark:border-[#27272A]/50 flex items-center gap-sm">
               <span className="material-symbols-outlined text-primary">smart_toy</span> 
               <div>
                  <span className="block font-label-md text-on-surface-variant uppercase tracking-wider text-xs">AI Quota</span>

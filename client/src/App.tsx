@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import type { ReactNode } from 'react';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -10,7 +11,7 @@ import StudyGroupChat from './pages/StudyGroupChat';
 import AIHub from './pages/AIHub';
 import Settings from './pages/Settings';
 
-function ProtectedRoute({ children }: { children: JSX.Element }) {
+function ProtectedRoute({ children }: { children: ReactNode }) {
   const token = localStorage.getItem('token');
   const location = useLocation();
 

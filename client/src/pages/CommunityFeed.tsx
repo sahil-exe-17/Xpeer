@@ -138,7 +138,7 @@ export default function CommunityFeed() {
             <select 
               value={selectedCommunity} 
               onChange={e => setSelectedCommunity(e.target.value)}
-              className="w-full bg-[#000000]/40 border border-[#27272A]/50 rounded-lg p-3 font-body-md text-primary outline-none focus:border-primary/50"
+              className="w-full bg-surface-container-low dark:bg-[#000000]/40 border border-outline-variant dark:border-[#27272A]/50 rounded-lg p-3 font-body-md text-primary outline-none focus:border-primary/50"
             >
               {communities.map(c => <option key={c.id} value={c.id} className="bg-surface text-on-surface">{c.name}</option>)}
             </select>
@@ -147,13 +147,13 @@ export default function CommunityFeed() {
               placeholder="Post Title" 
               value={newTitle}
               onChange={e => setNewTitle(e.target.value)}
-              className="w-full bg-[#000000]/40 border border-[#27272A]/50 rounded-lg p-3 font-headline-sm text-primary placeholder:text-surface-variant outline-none focus:border-primary/50"
+              className="w-full bg-surface-container-low dark:bg-[#000000]/40 border border-outline-variant dark:border-[#27272A]/50 rounded-lg p-3 font-headline-sm text-primary placeholder:text-surface-variant outline-none focus:border-primary/50"
             />
             <textarea 
               placeholder="What knowledge do you seek or offer?" 
               value={newContent}
               onChange={e => setNewContent(e.target.value)}
-              className="w-full bg-[#000000]/40 border border-[#27272A]/50 rounded-lg p-3 font-body-md text-on-surface placeholder:text-surface-variant outline-none focus:border-primary/50 min-h-[120px]"
+              className="w-full bg-surface-container-low dark:bg-[#000000]/40 border border-outline-variant dark:border-[#27272A]/50 rounded-lg p-3 font-body-md text-on-surface placeholder:text-surface-variant outline-none focus:border-primary/50 min-h-[120px]"
             />
             <div className="text-right">
               <button type="submit" className="bg-primary text-black font-label-md px-lg py-3 rounded-lg hover:opacity-90 transition-opacity uppercase tracking-widest flex items-center gap-xs inline-flex">
@@ -166,7 +166,7 @@ export default function CommunityFeed() {
       )}
 
       {/* Feed Tabs */}
-      <div className="flex items-center gap-sm mb-lg border-b border-[#27272A]/50 overflow-x-auto">
+      <div className="flex items-center gap-sm mb-lg border-b border-outline-variant dark:border-[#27272A]/50 overflow-x-auto">
         <button className="px-md py-3 border-b-2 border-primary text-primary font-label-md text-label-md hover:bg-surface-container-low/30 transition-colors whitespace-nowrap">Trending</button>
         <button className="px-md py-3 border-b-2 border-transparent text-on-surface-variant hover:text-primary hover:border-outline-variant/50 font-label-md text-label-md transition-colors whitespace-nowrap">Latest</button>
       </div>
@@ -186,17 +186,17 @@ export default function CommunityFeed() {
           <article 
              key={post.id} 
              onClick={() => handleExpandPost(post.id)}
-             className={`bg-[#09090B]/60 backdrop-blur-xl border border-[#27272A]/50 rounded-[20px] p-md relative z-10 transition-all duration-300 ambient-glow group cursor-pointer ${isExpanded ? 'ring-1 ring-primary/50 shadow-[0_0_30px_-5px_rgba(var(--primary-rgb),0.3)]' : 'hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] hover:border-outline-variant/80'}`}
+             className={`bg-surface dark:bg-[#09090B]/60 backdrop-blur-xl border border-outline-variant dark:border-[#27272A]/50 rounded-[20px] p-md relative z-10 transition-all duration-300 ambient-glow group cursor-pointer ${isExpanded ? 'ring-1 ring-primary/50 shadow-[0_0_30px_-5px_rgba(var(--primary-rgb),0.3)]' : 'hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] hover:border-outline-variant/80'}`}
           >
             <div className="flex items-start justify-between mb-sm">
               <div className="flex items-center gap-sm">
-                <div className="w-12 h-12 rounded-full border border-[#27272A]/80 flex items-center justify-center shrink-0 bg-surface-container-highest/50">
+                <div className="w-12 h-12 rounded-full border border-outline-variant dark:border-[#27272A]/80 flex items-center justify-center shrink-0 bg-surface-container-highest/50">
                    <span className="font-display text-primary text-xl font-bold">{post.author.username?.[0]?.toUpperCase()}</span>
                 </div>
                 <div>
                   <div className="flex items-center gap-xs">
                     <span className="font-label-md text-label-md text-primary">@{post.author.username}</span>
-                    <span className="px-2 py-0.5 rounded-full bg-surface-container-low/40 border border-[#27272A]/50 font-mono-sm text-mono-sm text-on-surface-variant">LVL {post.author.currentLevel}</span>
+                    <span className="px-2 py-0.5 rounded-full bg-surface-container-low/40 border border-outline-variant dark:border-[#27272A]/50 font-mono-sm text-mono-sm text-on-surface-variant">LVL {post.author.currentLevel}</span>
                   </div>
                   <div className="font-mono-sm text-mono-sm text-on-surface-variant mt-1">
                     {new Date(post.createdAt).toLocaleDateString()} in <span className="text-outline hover:text-primary transition-colors cursor-pointer">#{post.community.name}</span>
@@ -214,7 +214,7 @@ export default function CommunityFeed() {
                 {post.content}
               </p>
 
-              <div className="flex items-center gap-md border-t border-[#27272A]/50 pt-sm mt-sm">
+              <div className="flex items-center gap-md border-t border-outline-variant dark:border-[#27272A]/50 pt-sm mt-sm">
                 <button onClick={(e) => handleUpvote(post.id, e)} className="flex items-center gap-xs text-on-surface-variant hover:text-primary transition-colors group/btn">
                   <span className="material-symbols-outlined group-hover/btn:-translate-y-0.5 transition-transform" style={{ fontVariationSettings: "'FILL' 0" }}>arrow_upward</span>
                   <span className="font-label-md text-label-md">{post._count?.upvotes || 0}</span>
@@ -227,7 +227,7 @@ export default function CommunityFeed() {
 
               {/* Expanded View for Answers */}
               {isExpanded && (
-                 <div className="mt-md pt-md border-t border-[#27272A]/50 animate-slide-up" onClick={e => e.stopPropagation()}>
+                 <div className="mt-md pt-md border-t border-outline-variant dark:border-[#27272A]/50 animate-slide-up" onClick={e => e.stopPropagation()}>
                     <h4 className="font-label-md text-primary uppercase tracking-widest mb-sm flex items-center gap-2">
                        <span className="material-symbols-outlined text-[18px]">forum</span>
                        Knowledge Exchange
@@ -258,7 +258,7 @@ export default function CommunityFeed() {
                          value={newAnswer}
                          onChange={e => setNewAnswer(e.target.value)}
                          placeholder="Contribute to this discussion..."
-                         className="flex-1 bg-[#000000]/40 border border-[#27272A]/50 rounded-lg p-2 font-body-md text-primary outline-none focus:border-primary/50"
+                         className="flex-1 bg-surface-container-low dark:bg-[#000000]/40 border border-outline-variant dark:border-[#27272A]/50 rounded-lg p-2 font-body-md text-primary outline-none focus:border-primary/50"
                        />
                        <button type="submit" className="bg-surface-container-highest border border-surface-container-high hover:border-primary text-primary px-sm rounded-lg font-label-md uppercase tracking-widest transition-colors">
                           Reply

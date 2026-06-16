@@ -34,6 +34,14 @@ export default function Layout() {
             Lvl {user.currentLevel || 1} • {user.xp || 0} XP
           </div>
           <div className="flex items-center gap-sm">
+            <button 
+              onClick={() => document.documentElement.classList.toggle('dark')}
+              className="text-on-surface-variant hover:text-primary transition-opacity scale-95 active:scale-90 p-xs rounded-full hover:bg-surface-container-low duration-200"
+              title="Toggle Theme"
+            >
+              <span className="material-symbols-outlined dark:hidden">light_mode</span>
+              <span className="material-symbols-outlined hidden dark:inline">dark_mode</span>
+            </button>
             <button className="text-on-surface-variant hover:text-primary transition-opacity scale-95 active:scale-90 p-xs rounded-full hover:bg-surface-container-low duration-200">
               <span className="material-symbols-outlined">notifications</span>
             </button>

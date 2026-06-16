@@ -5,7 +5,7 @@ export default function StudyGroupChat() {
   const { id } = useParams();
 
   return (
-    <div className="flex flex-col h-[calc(100vh-140px)] animate-slide-up bg-[#09090B]/60 backdrop-blur-xl border border-[#27272A]/50 rounded-[20px] overflow-hidden ambient-glow">
+    <div className="flex flex-col h-[calc(100vh-140px)] animate-slide-up bg-surface dark:bg-[#09090B]/60 backdrop-blur-xl border border-outline-variant dark:border-[#27272A]/50 rounded-[20px] overflow-hidden ambient-glow">
       <div className="bg-surface-container-high border-b border-outline-variant p-md">
         <h2 className="font-display text-primary text-xl">Study Group Channel</h2>
         <p className="font-body-sm text-on-surface-variant">ID: {id}</p>

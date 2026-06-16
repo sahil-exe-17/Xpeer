@@ -52,7 +52,7 @@ export default function Login() {
               <label className="block font-label-md text-label-md text-on-surface-variant mb-xs uppercase tracking-wider">Username</label>
               <input 
                 type="text" 
-                className="w-full bg-[#000000]/40 border border-[#27272A]/50 backdrop-blur-md rounded-lg p-3 font-body-md text-primary placeholder:text-surface-variant transition-colors focus:border-primary/50"
+                className="w-full bg-surface-container-low dark:bg-[#000000]/40 border border-outline-variant dark:border-[#27272A]/50 backdrop-blur-md rounded-lg p-3 font-body-md text-primary placeholder:text-surface-variant transition-colors focus:border-primary/50"
                 value={username}
                 onChange={e => setUsername(e.target.value)}
                 placeholder="scholar_01"
@@ -64,7 +64,7 @@ export default function Login() {
             <label className="block font-label-md text-label-md text-on-surface-variant mb-xs uppercase tracking-wider">Email</label>
             <input 
               type="email" 
-              className="w-full bg-[#000000]/40 border border-[#27272A]/50 backdrop-blur-md rounded-lg p-3 font-body-md text-primary placeholder:text-surface-variant transition-colors focus:border-primary/50"
+              className="w-full bg-surface-container-low dark:bg-[#000000]/40 border border-outline-variant dark:border-[#27272A]/50 backdrop-blur-md rounded-lg p-3 font-body-md text-primary placeholder:text-surface-variant transition-colors focus:border-primary/50"
               value={email}
               onChange={e => setEmail(e.target.value)}
               placeholder="neo@matrix.edu"
@@ -75,7 +75,7 @@ export default function Login() {
             <label className="block font-label-md text-label-md text-on-surface-variant mb-xs uppercase tracking-wider">Password</label>
             <input 
               type="password" 
-              className="w-full bg-[#000000]/40 border border-[#27272A]/50 backdrop-blur-md rounded-lg p-3 font-body-md text-primary placeholder:text-surface-variant transition-colors focus:border-primary/50"
+              className="w-full bg-surface-container-low dark:bg-[#000000]/40 border border-outline-variant dark:border-[#27272A]/50 backdrop-blur-md rounded-lg p-3 font-body-md text-primary placeholder:text-surface-variant transition-colors focus:border-primary/50"
               value={password}
               onChange={e => setPassword(e.target.value)}
               placeholder="••••••••"

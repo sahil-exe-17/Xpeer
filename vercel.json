@@ -1,4 +1,5 @@
 {
+  "name": "xpeer",
   "version": 2,
   "builds": [
     {

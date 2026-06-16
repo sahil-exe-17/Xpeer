@@ -22,11 +22,11 @@ export default function Settings() {
              <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
                 <div>
                    <label className="block font-label-md text-on-surface-variant mb-xs uppercase tracking-wider">Username</label>
-                   <input type="text" disabled value={user.username || ''} className="w-full bg-[#000000]/40 border border-[#27272A]/50 rounded-lg p-3 font-body-md text-on-surface-variant cursor-not-allowed opacity-70" />
+                   <input type="text" disabled value={user.username || ''} className="w-full bg-surface-container-low dark:bg-[#000000]/40 border border-outline-variant dark:border-[#27272A]/50 rounded-lg p-3 font-body-md text-on-surface-variant cursor-not-allowed opacity-70" />
                 </div>
                 <div>
                    <label className="block font-label-md text-on-surface-variant mb-xs uppercase tracking-wider">Email Address</label>
-                   <input type="email" disabled value={user.email || ''} className="w-full bg-[#000000]/40 border border-[#27272A]/50 rounded-lg p-3 font-body-md text-on-surface-variant cursor-not-allowed opacity-70" />
+                   <input type="email" disabled value={user.email || ''} className="w-full bg-surface-container-low dark:bg-[#000000]/40 border border-outline-variant dark:border-[#27272A]/50 rounded-lg p-3 font-body-md text-on-surface-variant cursor-not-allowed opacity-70" />
                 </div>
              </div>
              <p className="text-sm font-mono-sm text-on-surface-variant mt-sm">Contact administration to change core identity parameters.</p>

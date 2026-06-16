@@ -62,7 +62,7 @@ export default function AIHub() {
 
         <div className="min-h-[200px] mb-lg relative z-10">
           {response ? (
-             <div className="bg-[#000000]/40 border border-[#27272A]/50 backdrop-blur-md rounded-lg p-md">
+             <div className="bg-surface-container-low dark:bg-[#000000]/40 border border-outline-variant dark:border-[#27272A]/50 backdrop-blur-md rounded-lg p-md">
                 <div className="flex items-center gap-xs mb-sm">
                   <span className="material-symbols-outlined text-primary text-sm">auto_awesome</span>
                   <span className="font-label-md text-primary uppercase tracking-widest">AI Response</span>
@@ -83,7 +83,7 @@ export default function AIHub() {
               value={question}
               onChange={e => setQuestion(e.target.value)}
               placeholder="e.g. How does Dijkstra's algorithm work?"
-              className="flex-1 bg-[#000000]/40 border border-[#27272A]/50 backdrop-blur-md rounded-lg p-3 font-body-md text-primary placeholder:text-surface-variant transition-colors focus:border-primary/50"
+              className="flex-1 bg-surface-container-low dark:bg-[#000000]/40 border border-outline-variant dark:border-[#27272A]/50 backdrop-blur-md rounded-lg p-3 font-body-md text-primary placeholder:text-surface-variant transition-colors focus:border-primary/50"
               disabled={isLoading}
            />
            <button 
